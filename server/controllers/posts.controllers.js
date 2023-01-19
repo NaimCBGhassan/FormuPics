@@ -13,8 +13,6 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
-    let image;
-
     if (req.files?.image && req.files.image !== null) {
       const { secure_url, public_id } = await uploadImage(req.files.image.tempFilePath);
       await fs.remove(req.files.image.tempFilePath);

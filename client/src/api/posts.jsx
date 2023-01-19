@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const getPosts = async () => await axios.get("/posts");
 
@@ -8,5 +9,25 @@ export function useQueryPosts() {
     refetchOnWindowFocus: false,
     refetchInterval: false,
     refetchIntervalInBackground: false,
+  });
+}
+
+const createPost = async (post) => {
+  try {
+    const res = await axios.post("/posts", post);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export function useCreatePost() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation(createPost, {
+    onSuccess: async (post) => {
+      await queryClient.invalidateQueries(["posts"]);
+      navigate("/");
+    },
   });
 }

@@ -1,15 +1,35 @@
-import { usePosts } from "../context/postContext";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQueryPosts } from "../api/posts.jsx";
+import { EmptyWindow, Loading } from "../components";
 
 export const HomePage = () => {
-  const { data, isLoading, isError } = useQueryPosts();
-  console.log(data);
-  console.log(isLoading);
+  const { data: res, isLoading } = useQueryPosts();
 
-  return (
-    <div>
-      <h1>HomaPage</h1>
-    </div>
-  );
+  if (isLoading) {
+    <Link to="/new">Create new post</Link>;
+
+    return <Loading />;
+  }
+
+  if (!isLoading) {
+    const { data: posts } = res;
+    if (posts.length === 0) {
+      return (
+        <>
+          <Link to="/new">Create new post</Link>
+          <EmptyWindow />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Link to="/new">Create new post</Link>
+
+        {posts.map((post, index) => (
+          <div key={post._id}>{post.title}</div>
+        ))}
+      </>
+    );
+  }
 };
