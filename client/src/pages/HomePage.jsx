@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useQueryPosts } from "../api/posts.jsx";
-import { EmptyWindow, Loading } from "../components";
+import { EmptyWindow, Loading, Post } from "../components";
 
 export const HomePage = () => {
   const { data: res, isLoading } = useQueryPosts();
@@ -23,13 +23,14 @@ export const HomePage = () => {
     }
 
     return (
-      <>
+      <div>
         <Link to="/new">Create new post</Link>
-
-        {posts.map((post, index) => (
-          <div key={post._id}>{post.title}</div>
-        ))}
-      </>
+        <div className="grid grid-cols-3 gap-3">
+          {posts.map((post, index) => (
+            <Post key={post._id} post={post} />
+          ))}
+        </div>
+      </div>
     );
   }
 };

@@ -14,7 +14,7 @@ export function useQueryPosts() {
 
 const createPost = async (post) => {
   try {
-    const res = await axios.post("/posts", post);
+    await axios.post("/posts", post);
   } catch (error) {
     console.log(error);
   }

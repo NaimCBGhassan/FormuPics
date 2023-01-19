@@ -4,12 +4,12 @@ const postSchema = new Schema(
   {
     title: {
       type: String,
-      require: true,
+      required: true,
       trim: true,
     },
     description: {
       type: String,
-      require: true,
+      required: true,
       trim: true,
     },
     image: {
@@ -23,4 +23,4 @@ const postSchema = new Schema(
   }
 );
 
-export default model(`Post`, postSchema);
+export default model("Post", postSchema);

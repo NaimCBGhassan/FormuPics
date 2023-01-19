@@ -13,16 +13,21 @@ export const getPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
+    const { title, description } = req.body;
+    let image;
+
+    console.log(req.body);
+
     if (req.files?.image && req.files.image !== null) {
       const { secure_url, public_id } = await uploadImage(req.files.image.tempFilePath);
       await fs.remove(req.files.image.tempFilePath);
-      req.body.image = {
+      image = {
         url: secure_url,
         public_id: public_id,
       };
     }
 
-    const newPost = Post(req.body);
+    const newPost = new Post({ title, description, image });
     await newPost.save();
 
     return res.json(newPost);
