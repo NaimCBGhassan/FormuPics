@@ -14,6 +14,10 @@ export const router = createBrowserRouter([
         path: "/new",
         element: <PostForm />,
       },
+      {
+        path: "/:id",
+        element: <PostForm />,
+      },
     ],
   },
 ]);

@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useDeletePost } from "../api/posts";
 
 export const Post = ({ post }) => {
   const { mutate } = useDeletePost();
+
+  const navigate = useNavigate();
 
   const handleDelete = (id) => {
     toast(
@@ -39,7 +42,10 @@ export const Post = ({ post }) => {
   };
 
   return (
-    <div className="bg-zinc-800 rounded-sm shadow-md shadow-black hover:bg-zinc-700 hover:cursor-pointer ">
+    <div
+      className="bg-zinc-800 rounded-sm shadow-md shadow-black hover:bg-zinc-700 hover:cursor-pointer"
+      onClick={() => navigate(`/${post._id}`)}
+    >
       <div className="px-4 py-7">
         <div className="flex justify-between mb-5">
           <h3>{post.title}</h3>
