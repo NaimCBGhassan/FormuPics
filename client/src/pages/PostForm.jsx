@@ -1,17 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { useCreatePost } from "../api/posts";
+import { useQueryPost, useCreatePost, useUpdatePost } from "../api/posts";
+
+const initialValues = {
+  title: "",
+  description: "",
+};
 
 export const PostForm = () => {
-  const [post, setPost] = useState({
-    title: "",
-    description: "",
-  });
+  const [post, setPost] = useState(initialValues);
+
+  const { id } = useParams();
+
+  if (id) {
+    const { data: res } = useQueryPost(id);
+    console.log(res);
+    useEffect(() => {
+      if (id) {
+        const { title, description } = res.data;
+        setPost({
+          title: title,
+          description: description,
+        });
+      }
+    }, []);
+  }
   const { mutate } = useCreatePost();
-  const params = useParams();
 
   return (
     <div className="text-white">
@@ -24,6 +41,7 @@ export const PostForm = () => {
         onSubmit={(values, actions) => {
           mutate(values);
         }}
+        enableReinitialize
       >
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit}>

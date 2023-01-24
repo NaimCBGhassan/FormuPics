@@ -61,6 +61,7 @@ export const deletePost = async (req, res) => {
 
 export const getPost = async (req, res) => {
   try {
+    if (req.params.id) return res.json({});
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send(`Not Found`);
     return res.json(post);

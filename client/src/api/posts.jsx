@@ -12,6 +12,21 @@ export function useQueryPosts() {
   });
 }
 
+//Getting Post
+const getPost = async (id) => {
+  console.log(id);
+  const res = await axios.get(`/posts/${id}`);
+  console.log(res);
+};
+export function useQueryPost(id) {
+  return useQuery(["post"], () => getPost(id), {
+    refetchOnWindowFocus: false,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
+    retry: false,
+  });
+}
+
 //Creating a Post
 const createPost = async (post) => {
   try {
@@ -25,6 +40,27 @@ export function useCreatePost() {
   const navigate = useNavigate();
 
   return useMutation(createPost, {
+    onSuccess: async (post) => {
+      await queryClient.invalidateQueries(["posts"]);
+      navigate("/");
+    },
+  });
+}
+
+//Updating a Post
+const updatingPost = async (id, post) => {
+  try {
+    await axios.post(`/posts/${id}`, post);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export function useUpdatePost() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation(updatingPost, {
     onSuccess: async (post) => {
       await queryClient.invalidateQueries(["posts"]);
       navigate("/");
