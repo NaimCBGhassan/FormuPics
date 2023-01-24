@@ -5,32 +5,24 @@ import { EmptyWindow, Loading, Post } from "../components";
 export const HomePage = () => {
   const { data: res, isLoading } = useQueryPosts();
 
-  if (isLoading) {
-    <Link to="/new">Create new post</Link>;
+  return (
+    <div>
+      <header className="flex justify-between items-center py-4">
+        <h1 className="text-2xl text-gray-400 font-bold">Posts ({res?.data.length || 0})</h1>
+        <Link to="/new" className="px-3 py-2 bg-indigo-500 hover:bg-indigo-600  text-white">
+          Create new post
+        </Link>
+      </header>
 
-    return <Loading />;
-  }
+      {res?.data.length === 0 && <EmptyWindow />}
 
-  if (!isLoading) {
-    const { data: posts } = res;
-    if (posts.length === 0) {
-      return (
-        <>
-          <Link to="/new">Create new post</Link>
-          <EmptyWindow />
-        </>
-      );
-    }
+      {isLoading && <Loading />}
 
-    return (
-      <div>
-        <Link to="/new">Create new post</Link>
-        <div className="grid grid-cols-3 gap-3">
-          {posts.map((post, index) => (
-            <Post key={post._id} post={post} />
-          ))}
-        </div>
+      <div className="grid grid-cols-3 gap-5">
+        {res?.data.map((post) => (
+          <Post key={post._id} post={post} />
+        ))}
       </div>
-    );
-  }
+    </div>
+  );
 };

@@ -13,11 +13,7 @@ export function useQueryPosts() {
 }
 
 //Getting Post
-const getPost = async (id) => {
-  console.log(id);
-  const res = await axios.get(`/posts/${id}`);
-  console.log(res);
-};
+const getPost = async (id) => await axios.get(`/posts/${id}`);
 export function useQueryPost(id) {
   return useQuery(["post"], () => getPost(id), {
     refetchOnWindowFocus: false,
@@ -30,7 +26,15 @@ export function useQueryPost(id) {
 //Creating a Post
 const createPost = async (post) => {
   try {
-    await axios.post("/posts", post);
+    const form = new FormData();
+
+    for (let key in post) {
+      form.append(key, post[key]);
+    }
+
+    return await axios.post("/posts", form, {
+      header: { "Content-Type": "multipart/form-data" },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -40,7 +44,7 @@ export function useCreatePost() {
   const navigate = useNavigate();
 
   return useMutation(createPost, {
-    onSuccess: async (post) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries(["posts"]);
       navigate("/");
     },
@@ -48,9 +52,10 @@ export function useCreatePost() {
 }
 
 //Updating a Post
-const updatingPost = async (id, post) => {
+const updatingPost = async (params) => {
   try {
-    await axios.post(`/posts/${id}`, post);
+    const { id, values: post } = params;
+    await axios.put(`/posts/${id}`, post);
   } catch (error) {
     console.log(error);
   }
@@ -61,7 +66,7 @@ export function useUpdatePost() {
   const navigate = useNavigate();
 
   return useMutation(updatingPost, {
-    onSuccess: async (post) => {
+    onSuccess: async () => {
       await queryClient.invalidateQueries(["posts"]);
       navigate("/");
     },
