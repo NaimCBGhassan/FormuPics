@@ -53,9 +53,10 @@ export const PostForm = () => {
             description: Yup.string().required("Description is required"),
           })}
           onSubmit={(values, actions) => {
+            actions.setSubmitting(true);
+            console.log(actions.isSubmitting);
             const params = { id, values };
             id ? updatePost.mutate(params) : createPost.mutate(values);
-            debugger;
             actions.setSubmitting(false);
           }}
           enableReinitialize
